@@ -186,7 +186,7 @@ a:hover { color: var(--primary-dark); }
 /* ---- Page Header (inner pages) ---- */
 .page-header {
   background:
-    linear-gradient(rgba(10, 30, 50, 0.72), rgba(8, 22, 40, 0.78)),
+    linear-gradient(rgba(10, 30, 50, 0.55), rgba(8, 22, 40, 0.62)),
     url('../images/image2.jpg') center/cover no-repeat;
   border-bottom: none;
   padding: 55px 0 45px;
