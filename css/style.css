@@ -133,7 +133,9 @@ a:hover { color: var(--primary-dark); }
 
 /* ---- Hero Section ---- */
 .hero {
-  background: linear-gradient(135deg, var(--primary) 0%, #1a3a5c 100%);
+  background:
+    linear-gradient(135deg, rgba(15, 40, 65, 0.82) 0%, rgba(10, 30, 50, 0.88) 100%),
+    url('../images/image2.jpg') center/cover no-repeat;
   color: var(--white);
   padding: 100px 0 80px;
   position: relative;
@@ -147,7 +149,7 @@ a:hover { color: var(--primary-dark); }
   right: -10%;
   width: 600px;
   height: 600px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.03);
   border-radius: 50%;
 }
 
@@ -181,14 +183,24 @@ a:hover { color: var(--primary-dark); }
 
 /* ---- Page Header (inner pages) ---- */
 .page-header {
-  background: var(--bg-light);
-  border-bottom: 1px solid var(--border);
-  padding: 50px 0 40px;
+  background:
+    linear-gradient(rgba(20, 45, 70, 0.78), rgba(15, 35, 60, 0.85)),
+    url('../images/image1.jpg') center/cover no-repeat;
+  border-bottom: none;
+  padding: 55px 0 45px;
 }
 
 .page-header h1 {
   font-size: 2.2rem;
-  color: var(--primary);
+  color: var(--white);
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.page-header .section-label {
+  color: var(--accent);
 }
 
 .page-header p {
@@ -272,6 +284,13 @@ a:hover { color: var(--primary-dark); }
   margin: 0.5rem 0 0;
   font-size: 0.92rem;
   color: var(--text-muted);
+}
+
+/* ---- Advantages Section Background ---- */
+.section-advantages {
+  background:
+    linear-gradient(rgba(248, 249, 250, 0.92), rgba(248, 249, 250, 0.92)),
+    url('../images/image3.jpg') center/cover no-repeat;
 }
 
 /* ---- Advantage Cards ---- */
