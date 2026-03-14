@@ -186,7 +186,7 @@ a:hover { color: var(--primary-dark); }
 /* ---- Page Header (inner pages) ---- */
 .page-header {
   background:
-    linear-gradient(rgba(10, 30, 50, 0.55), rgba(8, 22, 40, 0.62)),
+    linear-gradient(rgba(10, 30, 50, 0.65), rgba(8, 22, 40, 0.70)),
     url('../images/image2.jpg') center/cover no-repeat;
   border-bottom: none;
   padding: 55px 0 45px;
@@ -195,17 +195,18 @@ a:hover { color: var(--primary-dark); }
 .page-header h1 {
   font-size: 2.2rem;
   color: var(--white);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.5);
 }
 
 .page-header p {
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.65);
 }
 
 .page-header .section-label {
-  color: #6ee8a2;
-  text-shadow: none;
+  color: #7eeead;
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
 }
 
 .page-header p {
