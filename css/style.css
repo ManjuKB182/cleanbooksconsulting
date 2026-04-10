@@ -53,6 +53,14 @@ a:hover { color: var(--primary-dark); }
   letter-spacing: -0.5px;
 }
 
+.navbar-brand img {
+  width: 220px;
+  height: 70px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
 .navbar-brand span {
   color: var(--accent);
 }
