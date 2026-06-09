@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload proof of delivery documents for CleanBooks Consulting invoice tracking.">
+  <meta name="author" content="CleanBooks Consulting">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/aos.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pod.css">
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <title>POD Upload | CleanBooks Consulting</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="images/CleanBooks_name-removebg-preview.png" alt="CleanBooks logo"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about-us.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <span class="section-label">Proof of Delivery</span>
+        <h1>POD Upload</h1>
+        <p>Upload the delivery document against the selected invoice line.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="pod-layout">
+          <div class="pod-card">
+            <div class="pod-card-header">
+              <span class="section-label">Invoice Details</span>
+              <h2 id="invoiceTitle">Loading invoice...</h2>
+            </div>
+            <dl class="invoice-details" id="invoiceDetails">
+              <div><dt>Invoice Number</dt><dd id="invoiceNumber">-</dd></div>
+              <div><dt>Customer</dt><dd id="customerName">-</dd></div>
+              <div><dt>Partner</dt><dd id="partner">-</dd></div>
+              <div><dt>PO Number</dt><dd id="poNumber">-</dd></div>
+              <div><dt>SKU</dt><dd id="sku">-</dd></div>
+              <div><dt>Product</dt><dd id="productName">-</dd></div>
+              <div><dt>Invoice Value</dt><dd id="invoiceValue">-</dd></div>
+              <div><dt>LR Number</dt><dd id="lrNumber">-</dd></div>
+            </dl>
+          </div>
+
+          <form id="podForm" class="pod-card pod-form">
+            <div class="pod-card-header">
+              <span class="section-label">Upload</span>
+              <h2>Submit POD</h2>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="uploadedBy">Name <span class="required">*</span></label>
+              <input class="form-control" id="uploadedBy" name="uploadedBy" required autocomplete="name">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="podFile">POD file <span class="required">*</span></label>
+              <input class="form-control" id="podFile" name="podFile" type="file" accept="image/*,.pdf" required>
+              <p class="field-note">Accepted formats: JPG, PNG, WEBP, PDF. Maximum size depends on your Apps Script deployment limits.</p>
+            </div>
+
+            <div class="ocr-box">
+              <div>
+                <strong>Auto-read status</strong>
+                <span id="ocrStatus">Waiting for file</span>
+              </div>
+              <progress id="ocrProgress" max="1" value="0"></progress>
+            </div>
+
+            <div class="extracted-grid">
+              <div>
+                <label class="form-label" for="extractedInvoiceNumber">Extracted invoice</label>
+                <input class="form-control" id="extractedInvoiceNumber" readonly>
+              </div>
+              <div>
+                <label class="form-label" for="extractedLrNumber">Extracted LR</label>
+                <input class="form-control" id="extractedLrNumber" readonly>
+              </div>
+              <div>
+                <label class="form-label" for="extractedPodDate">Extracted POD date</label>
+                <input class="form-control" id="extractedPodDate" readonly>
+              </div>
+              <div>
+                <label class="form-label" for="extractedReceiver">Extracted receiver</label>
+                <input class="form-control" id="extractedReceiver" readonly>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="remarks">Remarks</label>
+              <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+            </div>
+
+            <button class="btn btn-primary w-100" id="submitButton" type="submit">Upload POD</button>
+            <p class="pod-message" id="formMessage" role="status"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-brand">Clean<span>Books</span> Consulting</div>
+      <p class="mt-2">Reconciliation &amp; Accounting Support Services for Modern Businesses.</p>
+      <div class="footer-divider"></div>
+      <p class="footer-copy">CleanBooks Consulting <span id="year"></span>. Reconciliation &amp; Accounting Support Services.</p>
+    </div>
+  </footer>
+
+  <button id="back-to-top" aria-label="Back to top">&#8679;</button>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/aos.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pod-config.js"></script>
+  <script src="js/pod-upload.js"></script>
+</body>
+</html>

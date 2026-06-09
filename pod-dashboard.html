@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="POD status dashboard for CleanBooks Consulting.">
+  <meta name="author" content="CleanBooks Consulting">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/aos.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/pod.css">
+  <title>POD Dashboard | CleanBooks Consulting</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html"><img src="images/CleanBooks_name-removebg-preview.png" alt="CleanBooks logo"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="about-us.html">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <span class="section-label">Operations Dashboard</span>
+        <h1>POD Status Dashboard</h1>
+        <p>Track invoices where proof of delivery has been uploaded or is still pending.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="dashboard-actions">
+          <button class="btn btn-primary" id="refreshButton" type="button">Refresh</button>
+          <a class="btn btn-outline-primary" id="openSheetLink" href="https://docs.google.com/spreadsheets/d/1DFzd0YqjxxE0LA5LmE2ok9gjQOL3k8qDM1zmI6-knrw/edit" target="_blank" rel="noreferrer">Open Sheet</a>
+        </div>
+
+        <div class="pod-metrics" id="podMetrics">
+          <article><span>Total invoices</span><strong id="totalCount">0</strong><small id="totalAmount">0</small></article>
+          <article><span>POD received</span><strong id="receivedCount">0</strong><small id="receivedAmount">0</small></article>
+          <article><span>POD pending</span><strong id="pendingCount">0</strong><small id="pendingAmount">0</small></article>
+        </div>
+
+        <div class="pod-toolbar">
+          <label>
+            Search
+            <input class="form-control" id="searchInput" placeholder="Invoice, customer, partner, SKU, LR">
+          </label>
+          <label>
+            POD status
+            <select class="form-control" id="statusFilter">
+              <option value="all">All</option>
+              <option value="received">POD received</option>
+              <option value="pending">POD pending</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="pod-table-wrap">
+          <table class="pod-table">
+            <thead>
+              <tr>
+                <th>Invoice</th>
+                <th>Customer</th>
+                <th>Partner</th>
+                <th>SKU / Product</th>
+                <th>Invoice Value</th>
+                <th>LR</th>
+                <th>Status</th>
+                <th>POD</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardBody"></tbody>
+          </table>
+          <p class="pod-empty" id="emptyState">No rows found.</p>
+        </div>
+
+        <p class="pod-message" id="dashboardMessage" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-brand">Clean<span>Books</span> Consulting</div>
+      <p class="mt-2">Reconciliation &amp; Accounting Support Services for Modern Businesses.</p>
+      <div class="footer-divider"></div>
+      <p class="footer-copy">CleanBooks Consulting <span id="year"></span>. Reconciliation &amp; Accounting Support Services.</p>
+    </div>
+  </footer>
+
+  <button id="back-to-top" aria-label="Back to top">&#8679;</button>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/aos.min.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/pod-config.js"></script>
+  <script src="js/pod-dashboard.js"></script>
+</body>
+</html>
