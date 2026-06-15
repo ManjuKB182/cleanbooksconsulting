@@ -54,49 +54,14 @@ a:hover { color: var(--primary-dark); }
   letter-spacing: -0.5px;
 }
 
-.navbar-brand img {
-  width: 220px;
-  height: 70px;
-  object-fit: cover;
-  object-position: center;
+.navbar-brand img,
+.brand-logo {
+  width: min(270px, 58vw);
+  height: auto;
+  max-height: 58px;
+  object-fit: contain;
+  object-position: left center;
   display: block;
-}
-
-.brand-wordmark {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  line-height: 1.1;
-}
-
-.brand-wordmark .brand-mark {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  color: var(--white);
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
-.brand-wordmark strong {
-  display: block;
-  color: var(--primary-dark);
-  font-size: 1.25rem;
-  letter-spacing: 0;
-}
-
-.brand-wordmark small {
-  display: block;
-  color: var(--text-muted);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
 }
 
 .navbar-brand span {
@@ -943,16 +908,10 @@ footer a:hover { color: var(--white); }
   .hero h1 { font-size: 1.6rem; }
   .modern-hero h1 { font-size: 1.95rem; }
   .navbar-brand { font-size: 1.2rem; }
-  .navbar-brand img {
-    width: auto;
-    height: auto;
+  .navbar-brand img,
+  .brand-logo {
+    width: min(220px, 62vw);
     max-height: 48px;
-  }
-  .brand-wordmark strong { font-size: 1.05rem; }
-  .brand-wordmark small { font-size: 0.6rem; }
-  .brand-wordmark .brand-mark {
-    width: 36px;
-    height: 36px;
   }
   .metric-grid,
   .metric-grid.compact {
