@@ -5,8 +5,10 @@
 :root {
   --primary:    #0B3558;
   --primary-dark: #061f36;
-  --accent:     #00A6D6;
-  --accent-dark: #0086ad;
+  --accent:     #74B844;
+  --accent-dark: #4F8F2F;
+  --accent-soft: #F0F8E9;
+  --cyan:       #00A6D6;
   --teal:       #0DB7A5;
   --text:       #17253A;
   --text-muted: #607089;
@@ -54,18 +56,31 @@ a:hover { color: var(--primary-dark); }
   letter-spacing: -0.5px;
 }
 
-.navbar-brand img,
-.brand-logo {
-  width: min(270px, 58vw);
-  height: auto;
-  max-height: 58px;
-  object-fit: contain;
-  object-position: left center;
-  display: block;
+.brand-wordmark {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: end;
+  line-height: .9;
+  letter-spacing: 0;
 }
 
-.navbar-brand span {
-  color: var(--accent);
+.brand-wordmark .brand-clean,
+.brand-wordmark .brand-books {
+  font-size: 1.65rem;
+  font-weight: 700;
+}
+
+.brand-wordmark .brand-clean { color: var(--primary-dark); }
+.brand-wordmark .brand-books { color: var(--accent-dark); }
+.brand-wordmark small {
+  grid-column: 1 / -1;
+  margin-top: .35rem;
+  color: var(--primary);
+  font-size: .57rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .nav-link {
@@ -89,7 +104,7 @@ a:hover { color: var(--primary-dark); }
 }
 
 .pod-dashboard-link {
-  background: var(--primary);
+  background: var(--accent-dark);
   border-radius: 4px;
   color: var(--white) !important;
   margin-left: 0.5rem;
@@ -100,7 +115,7 @@ a:hover { color: var(--primary-dark); }
 /* ---- Modern Homepage ---- */
 .modern-hero {
   background:
-    radial-gradient(circle at 72% 20%, rgba(0, 166, 214, 0.18), transparent 34%),
+    radial-gradient(circle at 72% 20%, rgba(116, 184, 68, 0.18), transparent 34%),
     linear-gradient(135deg, rgba(6, 31, 54, 0.96) 0%, rgba(11, 53, 88, 0.92) 58%, rgba(7, 27, 47, 0.96) 100%),
     url('../images/image2.jpg') center/cover no-repeat;
   padding: 88px 0 72px;
@@ -109,6 +124,8 @@ a:hover { color: var(--primary-dark); }
 .modern-hero::before {
   display: none;
 }
+
+.hero-green { color: #9BD16D; }
 
 .modern-hero h1 {
   font-size: 3.15rem;
@@ -167,7 +184,8 @@ a:hover { color: var(--primary-dark); }
 
 .demo-tab.active {
   background: var(--white);
-  color: var(--primary);
+  color: var(--accent-dark);
+  box-shadow: inset 0 -3px 0 var(--accent);
 }
 
 .demo-panel[hidden] { display: none !important; }
@@ -277,6 +295,10 @@ a:hover { color: var(--primary-dark); }
   padding: 0.85rem;
   min-height: 84px;
 }
+
+.metric-grid div:nth-child(3n + 1) { border-left-color: var(--accent); }
+.metric-grid div:nth-child(3n + 2) { border-left-color: var(--cyan); }
+.metric-grid div:nth-child(3n) { border-left-color: var(--teal); }
 
 .metric-grid span {
   display: block;
@@ -403,6 +425,10 @@ a:hover { color: var(--primary-dark); }
   padding: 1.6rem;
 }
 
+.row > div:nth-child(even) > .solution-card { border-top-color: var(--cyan); }
+.problem-section .row > div:nth-child(odd) .insight-card { border-top: 3px solid var(--accent); }
+.problem-section .row > div:nth-child(even) .insight-card { border-top: 3px solid var(--cyan); }
+
 .solution-card ul,
 .check-list {
   margin: 0;
@@ -445,6 +471,12 @@ a:hover { color: var(--primary-dark); }
   color: var(--primary-dark);
   font-weight: 700;
   font-size: 0.92rem;
+}
+
+.tag-grid span:nth-child(3n + 1),
+.deliverable-grid span:nth-child(3n + 1) {
+  background: var(--accent-soft);
+  border-color: #CFE8BA;
 }
 
 .deliverable-grid {
@@ -565,7 +597,8 @@ a:hover { color: var(--primary-dark); }
 
 .hero .badge-pill {
   display: inline-block;
-  background: rgba(255,255,255,0.15);
+  background: rgba(116,184,68,0.2);
+  border: 1px solid rgba(155,209,109,.45);
   color: var(--white);
   border-radius: 20px;
   padding: 0.3rem 0.9rem;
@@ -745,6 +778,7 @@ a:hover { color: var(--primary-dark); }
   color: var(--white);
   border-radius: 10px;
   padding: 2.5rem;
+  border-top: 4px solid var(--accent);
 }
 
 .objective-box h3 {
@@ -813,7 +847,7 @@ a:hover { color: var(--primary-dark); }
 
 /* ---- CTA Banner ---- */
 .cta-banner {
-  background: linear-gradient(135deg, var(--accent) 0%, #1e9150 100%);
+  background: var(--accent-dark);
   color: var(--white);
   padding: 60px 0;
   text-align: center;
@@ -959,7 +993,7 @@ footer a {
   transition: color 0.2s;
 }
 
-footer a:hover { color: var(--white); }
+footer a:hover { color: #9BD16D; }
 
 .footer-divider {
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -1054,11 +1088,9 @@ footer a:hover { color: var(--white); }
   .hero h1 { font-size: 1.6rem; }
   .modern-hero h1 { font-size: 1.95rem; }
   .navbar-brand { font-size: 1.2rem; }
-  .navbar-brand img,
-  .brand-logo {
-    width: min(220px, 62vw);
-    max-height: 48px;
-  }
+  .brand-wordmark .brand-clean,
+  .brand-wordmark .brand-books { font-size: 1.4rem; }
+  .brand-wordmark small { font-size: .5rem; letter-spacing: 2.5px; }
   .metric-grid,
   .metric-grid.compact {
     grid-template-columns: 1fr;
