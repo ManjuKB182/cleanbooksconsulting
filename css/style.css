@@ -180,6 +180,29 @@ a:hover { color: var(--primary-dark); }
   padding: 0.65rem 0.8rem;
 }
 
+.mockup-filter-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mockup-filter-row span {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--primary-dark);
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.55rem 0.7rem;
+  white-space: nowrap;
+}
+
+.standalone-search.mockup-filter-row {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
 .standalone-search {
   display: inline-block;
   margin-top: 0.5rem;
@@ -664,6 +687,24 @@ a:hover { color: var(--primary-dark); }
 }
 
 /* ---- Experience / About ---- */
+.about-header h1 { max-width: 820px; }
+.about-header p { max-width: 760px; }
+.about-copy { max-width: 920px; }
+.about-copy p { font-size: 1.04rem; line-height: 1.8; }
+.lead-copy { font-family: 'Inter', sans-serif; font-size: 1.35rem !important; font-weight: 600; color: var(--primary); }
+.objective-strip { margin-top: 2rem; padding: 1.5rem 1.75rem; border-left: 4px solid var(--accent); background: var(--bg-light); font-size: 1.05rem; line-height: 1.65; }
+.section-heading { max-width: 680px; margin-bottom: 2.5rem; }
+.expertise-list { border-top: 1px solid var(--border); }
+.expertise-row { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); gap: 1.5rem 4rem; padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+.expertise-number { display: block; margin-bottom: .65rem; color: var(--accent-dark); font-family: 'Inter', sans-serif; font-size: .78rem; font-weight: 700; letter-spacing: 1px; }
+.expertise-row h3 { color: var(--primary); font-size: 1.35rem; }
+.expertise-row ul { columns: 2; column-gap: 2rem; margin: 0; padding-left: 1.1rem; }
+.expertise-row li { break-inside: avoid; margin-bottom: .65rem; color: var(--text); }
+.expertise-outcome { grid-column: 1 / -1; margin: 0; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--text-muted); font-weight: 600; }
+.why-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: 5rem; align-items: start; }
+.why-layout h2 { font-size: 2.15rem; }
+.why-layout p { font-size: 1.04rem; line-height: 1.8; }
+.closing-statement { display: block; margin-top: 1.5rem; color: var(--accent-dark); font-family: 'Inter', sans-serif; font-size: 1.25rem; }
 .experience-card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -902,6 +943,9 @@ footer a:hover { color: var(--white); }
   .deliverable-grid span {
     width: 100%;
   }
+  .expertise-row,
+  .why-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+  .expertise-row ul { columns: 1; }
 }
 
 @media (max-width: 576px) {
