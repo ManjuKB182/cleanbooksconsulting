@@ -34,6 +34,25 @@ document.addEventListener('DOMContentLoaded', () => {
     AOS.init({ duration: 700, once: true, offset: 60 });
   }
 
+  // --- Homepage dashboard demo switcher ---
+  const demoTabs = document.querySelectorAll('[data-demo-tab]');
+  const demoPanels = document.querySelectorAll('[data-demo-panel]');
+  demoTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const selected = tab.dataset.demoTab;
+      demoTabs.forEach(item => {
+        const active = item === tab;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', String(active));
+      });
+      demoPanels.forEach(panel => {
+        const active = panel.dataset.demoPanel === selected;
+        panel.classList.toggle('active', active);
+        panel.hidden = !active;
+      });
+    });
+  });
+
   // --- Enable Submit button only when required fields are filled ---
   const submitBtn = document.getElementById('submit-btn');
   if (submitBtn) {

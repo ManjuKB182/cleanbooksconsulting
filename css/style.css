@@ -141,6 +141,48 @@ a:hover { color: var(--primary-dark); }
   box-shadow: 0 24px 60px rgba(7, 27, 47, 0.18);
 }
 
+.demo-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin: 0 0 10px;
+  padding: 4px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 6px;
+}
+
+.demo-tab {
+  min-height: 42px;
+  padding: .6rem .8rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255,255,255,.78);
+  font-family: 'Inter', sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.demo-tab.active {
+  background: var(--white);
+  color: var(--primary);
+}
+
+.demo-panel[hidden] { display: none !important; }
+
+.solution-priority {
+  display: inline-block;
+  margin-bottom: .75rem;
+  color: var(--accent-dark);
+  font-family: 'Inter', sans-serif;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .hero-dashboard {
   transform: translateY(6px);
 }
@@ -570,6 +612,20 @@ a:hover { color: var(--primary-dark); }
   padding: 2rem 1.75rem;
   height: 100%;
   transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.service-card-featured {
+  border-top: 4px solid var(--accent);
+}
+
+.service-card .service-icon {
+  width: auto;
+  min-width: 52px;
+  padding: 0 .7rem;
+  border-radius: 4px;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .5px;
 }
 
 .service-card:hover {
