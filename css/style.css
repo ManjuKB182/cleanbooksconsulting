@@ -172,6 +172,10 @@ a:hover { color: var(--primary-dark); }
 
 .demo-panel[hidden] { display: none !important; }
 
+.mini-table-row.dispute-breakdown-row {
+  grid-template-columns: 1.15fr .75fr .55fr 1.55fr;
+}
+
 .solution-priority {
   display: inline-block;
   margin-bottom: .75rem;
@@ -987,6 +991,12 @@ footer a:hover { color: var(--white); }
   }
   #dashboard .mini-table {
     overflow-x: auto;
+  }
+  .hero-dashboard .mini-table {
+    overflow-x: auto;
+  }
+  .hero-dashboard .mini-table-row.dispute-breakdown-row {
+    min-width: 620px;
   }
   #dashboard .mini-table-row {
     grid-template-columns: 120px repeat(5, 120px);
