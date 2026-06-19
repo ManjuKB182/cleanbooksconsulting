@@ -59,6 +59,13 @@ a:hover { color: var(--primary-dark); }
   letter-spacing: -0.5px;
 }
 
+.navbar-brand .brand-logo {
+  display: block;
+  width: auto;
+  height: 50px;
+  object-fit: contain;
+}
+
 .brand-wordmark {
   display: inline-grid;
   grid-template-columns: auto auto;
@@ -1119,6 +1126,7 @@ footer a:hover { color: var(--mint); }
   .hero h1 { font-size: 1.6rem; }
   .modern-hero h1 { font-size: 1.95rem; }
   .navbar-brand { font-size: 1.2rem; }
+  .navbar-brand .brand-logo { height: 42px; }
   .brand-wordmark .brand-clean,
   .brand-wordmark .brand-books { font-size: 1.4rem; }
   .brand-wordmark small { font-size: .5rem; letter-spacing: 2.5px; }
