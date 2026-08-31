@@ -8,7 +8,6 @@ import { NewClient } from "./admin/NewClient";
 import { DashboardShell } from "./components/DashboardShell";
 import { Layout } from "./components/Layout";
 import { DashboardIndex } from "./dashboards/DashboardIndex";
-import { PodDashboard } from "./dashboards/PodDashboard";
 import "./index.css";
 import { AuthProvider } from "./lib/auth";
 import { Login } from "./routes/Login";
@@ -16,6 +15,7 @@ import { RequireClientViewer, RequireStaffAdmin } from "./routes/RequireAuth";
 import { RoleHome } from "./routes/RoleHome";
 
 // recharts is sizeable — code-split it out of the initial bundle (login/admin never need it).
+const PodDashboard = lazy(() => import("./dashboards/PodDashboard").then((m) => ({ default: m.PodDashboard })));
 const ReconciliationDashboard = lazy(() => import("./dashboards/ReconciliationDashboard").then((m) => ({ default: m.ReconciliationDashboard })));
 const InvoicesDashboard = lazy(() => import("./dashboards/InvoicesDashboard").then((m) => ({ default: m.InvoicesDashboard })));
 const ReturnsDashboard = lazy(() => import("./dashboards/ReturnsDashboard").then((m) => ({ default: m.ReturnsDashboard })));
@@ -42,7 +42,14 @@ createRoot(document.getElementById("root")!).render(
             }
           >
             <Route index element={<DashboardIndex />} />
-            <Route path="pod" element={<PodDashboard />} />
+            <Route
+              path="pod"
+              element={
+                <ChartPage>
+                  <PodDashboard />
+                </ChartPage>
+              }
+            />
             <Route
               path="reconciliation"
               element={
