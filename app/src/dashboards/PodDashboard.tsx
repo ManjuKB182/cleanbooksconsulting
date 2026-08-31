@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { StatRow, StatTile } from "../components/StatTiles";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { PodStatusRow } from "../lib/types";
@@ -34,24 +35,11 @@ export function PodDashboard() {
       <h1>POD & Delivery Status</h1>
       {error && <p className="error-text">{error}</p>}
 
-      <div className="stat-row">
-        <div className="stat-tile">
-          <span className="stat-label">Total invoices</span>
-          <span className="stat-value">{rows?.length ?? "—"}</span>
-        </div>
-        <div className="stat-tile">
-          <span className="stat-label">POD received</span>
-          <span className="stat-value" style={{ color: "var(--mint)" }}>
-            {rows ? received : "—"}
-          </span>
-        </div>
-        <div className="stat-tile">
-          <span className="stat-label">POD pending</span>
-          <span className="stat-value" style={{ color: "var(--warning)" }}>
-            {rows ? pending : "—"}
-          </span>
-        </div>
-      </div>
+      <StatRow>
+        <StatTile label="Total invoices" value={rows?.length ?? "—"} />
+        <StatTile label="POD received" value={rows ? received : "—"} color="var(--mint)" />
+        <StatTile label="POD pending" value={rows ? pending : "—"} color="var(--warning)" />
+      </StatRow>
 
       <input
         className="search-input"

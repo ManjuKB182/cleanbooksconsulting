@@ -6,9 +6,12 @@ import { ClientDetail } from "./admin/ClientDetail";
 import { ClientsList } from "./admin/ClientsList";
 import { NewClient } from "./admin/NewClient";
 import { Layout } from "./components/Layout";
-import { ComingSoon } from "./dashboards/ComingSoon";
+import { CashFlowDashboard } from "./dashboards/CashFlowDashboard";
 import { DashboardsHome } from "./dashboards/DashboardsHome";
+import { InvoicesDashboard } from "./dashboards/InvoicesDashboard";
 import { PodDashboard } from "./dashboards/PodDashboard";
+import { ReconciliationDashboard } from "./dashboards/ReconciliationDashboard";
+import { ReturnsDashboard } from "./dashboards/ReturnsDashboard";
 import "./index.css";
 import { AuthProvider } from "./lib/auth";
 import { Login } from "./routes/Login";
@@ -47,7 +50,7 @@ createRoot(document.getElementById("root")!).render(
             element={
               <RequireAuth>
                 <Layout>
-                  <ComingSoon title="Marketplace Reconciliation" />
+                  <ReconciliationDashboard />
                 </Layout>
               </RequireAuth>
             }
@@ -57,7 +60,7 @@ createRoot(document.getElementById("root")!).render(
             element={
               <RequireAuth>
                 <Layout>
-                  <ComingSoon title="Invoice & Payment Ledger" />
+                  <InvoicesDashboard />
                 </Layout>
               </RequireAuth>
             }
@@ -67,7 +70,7 @@ createRoot(document.getElementById("root")!).render(
             element={
               <RequireAuth>
                 <Layout>
-                  <ComingSoon title="Returns & Chargebacks" />
+                  <ReturnsDashboard />
                 </Layout>
               </RequireAuth>
             }
@@ -77,7 +80,7 @@ createRoot(document.getElementById("root")!).render(
             element={
               <RequireAuth>
                 <Layout>
-                  <ComingSoon title="Cash Flow Summary" />
+                  <CashFlowDashboard />
                 </Layout>
               </RequireAuth>
             }
