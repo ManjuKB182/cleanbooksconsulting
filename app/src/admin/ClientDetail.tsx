@@ -1,18 +1,41 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { DashboardSummary, IngestionSource } from "../lib/types";
+
+const GMAIL_CALLBACK_MESSAGE: Record<string, { tone: "ok" | "warn" | "error"; text: string }> = {
+  connected: { tone: "ok", text: "Gmail connected. Ingestion will pick up this mailbox on the next scheduled run." },
+  denied: { tone: "warn", text: "Gmail connection was cancelled — access wasn't granted." },
+  error: { tone: "error", text: "Something went wrong connecting Gmail. Try again, or check the client_id matches." },
+};
 
 export function ClientDetail() {
   const { session } = useAuth();
   const { clientId } = useParams();
   const id = Number(clientId);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [dashboards, setDashboards] = useState<DashboardSummary[] | null>(null);
   const [source, setSource] = useState<IngestionSource | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
+
+  const gmailCallback = searchParams.get("gmail");
+  const gmailMessage = gmailCallback ? GMAIL_CALLBACK_MESSAGE[gmailCallback] : undefined;
+
+  useEffect(() => {
+    if (!gmailCallback) return;
+    // Clear the query param so refreshing the page doesn't keep re-showing the banner.
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("gmail");
+        return next;
+      },
+      { replace: true }
+    );
+  }, [gmailCallback, setSearchParams]);
 
   const load = useCallback(() => {
     if (!session || !id) return;
@@ -55,6 +78,7 @@ export function ClientDetail() {
   return (
     <div>
       <h1>Client #{id}</h1>
+      {gmailMessage && <p className={`callout callout-${gmailMessage.tone}`}>{gmailMessage.text}</p>}
       {error && <p className="error-text">{error}</p>}
 
       <section className="panel">
