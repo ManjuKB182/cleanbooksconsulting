@@ -5,6 +5,7 @@ import { DemoNotice } from "../components/DemoBadge";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { CATEGORY_PALETTE, chartColors } from "../lib/chartColors";
 import { countBy, withinRange } from "./chartUtils";
+import { DASHBOARD_META } from "./dashboardMeta";
 import { RETURNS_EARLIEST, mockReturns } from "./mockData";
 
 const STATUS_PILL: Record<string, string> = {
@@ -32,9 +33,9 @@ export function ReturnsDashboard() {
       <DateRangeFilter range={range} onChange={setRange} earliest={RETURNS_EARLIEST} />
 
       <StatRow>
-        <StatTile label="Total returns" value={rows.length} />
+        <StatTile label="Total returns" value={rows.length} color={DASHBOARD_META.returns.color} />
         <StatTile label="Refund value" value={`₹${refundValue.toLocaleString()}`} color="var(--warning)" />
-        <StatTile label="Pending review" value={pending} />
+        <StatTile label="Pending review" value={pending} color="var(--critical)" />
       </StatRow>
 
       <div className="panel chart-panel">

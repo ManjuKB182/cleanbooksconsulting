@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { PodStatusRow } from "../lib/types";
+import { chartColors } from "../lib/chartColors";
+import { DASHBOARD_META } from "./dashboardMeta";
 
 export function PodDashboard() {
   const { session } = useAuth();
@@ -25,6 +28,13 @@ export function PodDashboard() {
 
   const received = rows?.filter((r) => r.pod_received).length ?? 0;
   const pending = (rows?.length ?? 0) - received;
+  const breakdown = useMemo(
+    () => [
+      { name: "Received", value: received },
+      { name: "Pending", value: pending },
+    ],
+    [received, pending]
+  );
 
   return (
     <div>
@@ -32,10 +42,26 @@ export function PodDashboard() {
       {error && <p className="error-text">{error}</p>}
 
       <StatRow>
-        <StatTile label="Total invoices" value={rows?.length ?? "—"} />
+        <StatTile label="Total invoices" value={rows?.length ?? "—"} color={DASHBOARD_META.pod.color} />
         <StatTile label="POD received" value={rows ? received : "—"} color="var(--mint)" />
         <StatTile label="POD pending" value={rows ? pending : "—"} color="var(--warning)" />
       </StatRow>
+
+      {rows && rows.length > 0 && (
+        <div className="panel chart-panel">
+          <h2>Received vs. pending</h2>
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Pie data={breakdown} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} paddingAngle={3} isAnimationActive={false}>
+                <Cell fill="#059669" />
+                <Cell fill={chartColors.warning} />
+              </Pie>
+              <Tooltip contentStyle={{ borderRadius: 8, borderColor: chartColors.grid, fontSize: 13 }} />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
 
       <input
         className="search-input"
@@ -77,6 +103,14 @@ export function PodDashboard() {
               <tr>
                 <td colSpan={7} className="muted">
                   No matching invoices.
+                </td>
+              </tr>
+            )}
+            {rows && rows.length === 0 && (
+              <tr>
+                <td colSpan={7} className="muted">
+                  No POD data yet — this dashboard is wired to live ingestion, and nothing has synced for this
+                  client so far.
                 </td>
               </tr>
             )}

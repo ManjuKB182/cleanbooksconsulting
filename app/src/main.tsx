@@ -5,8 +5,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ClientDetail } from "./admin/ClientDetail";
 import { ClientsList } from "./admin/ClientsList";
 import { NewClient } from "./admin/NewClient";
+import { DashboardShell } from "./components/DashboardShell";
 import { Layout } from "./components/Layout";
-import { DashboardsHome } from "./dashboards/DashboardsHome";
+import { DashboardIndex } from "./dashboards/DashboardIndex";
 import { PodDashboard } from "./dashboards/PodDashboard";
 import "./index.css";
 import { AuthProvider } from "./lib/auth";
@@ -36,62 +37,45 @@ createRoot(document.getElementById("root")!).render(
             path="/dashboards"
             element={
               <RequireClientViewer>
-                <Layout>
-                  <DashboardsHome />
-                </Layout>
+                <DashboardShell />
               </RequireClientViewer>
             }
-          />
-          <Route
-            path="/dashboards/pod"
-            element={
-              <RequireClientViewer>
-                <Layout>
-                  <PodDashboard />
-                </Layout>
-              </RequireClientViewer>
-            }
-          />
-          <Route
-            path="/dashboards/reconciliation"
-            element={
-              <RequireClientViewer>
-                <Layout>
-                  <ChartPage><ReconciliationDashboard /></ChartPage>
-                </Layout>
-              </RequireClientViewer>
-            }
-          />
-          <Route
-            path="/dashboards/invoices"
-            element={
-              <RequireClientViewer>
-                <Layout>
-                  <ChartPage><InvoicesDashboard /></ChartPage>
-                </Layout>
-              </RequireClientViewer>
-            }
-          />
-          <Route
-            path="/dashboards/returns"
-            element={
-              <RequireClientViewer>
-                <Layout>
-                  <ChartPage><ReturnsDashboard /></ChartPage>
-                </Layout>
-              </RequireClientViewer>
-            }
-          />
-          <Route
-            path="/dashboards/cash-flow"
-            element={
-              <RequireClientViewer>
-                <Layout>
-                  <ChartPage><CashFlowDashboard /></ChartPage>
-                </Layout>
-              </RequireClientViewer>
-            }
-          />
+          >
+            <Route index element={<DashboardIndex />} />
+            <Route path="pod" element={<PodDashboard />} />
+            <Route
+              path="reconciliation"
+              element={
+                <ChartPage>
+                  <ReconciliationDashboard />
+                </ChartPage>
+              }
+            />
+            <Route
+              path="invoices"
+              element={
+                <ChartPage>
+                  <InvoicesDashboard />
+                </ChartPage>
+              }
+            />
+            <Route
+              path="returns"
+              element={
+                <ChartPage>
+                  <ReturnsDashboard />
+                </ChartPage>
+              }
+            />
+            <Route
+              path="cash-flow"
+              element={
+                <ChartPage>
+                  <CashFlowDashboard />
+                </ChartPage>
+              }
+            />
+          </Route>
 
           <Route
             path="/admin"

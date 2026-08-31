@@ -17,6 +17,7 @@ import { DemoNotice } from "../components/DemoBadge";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { CATEGORY_PALETTE, chartColors } from "../lib/chartColors";
 import { aggregateMonthly, countBy, withinRange } from "./chartUtils";
+import { DASHBOARD_META } from "./dashboardMeta";
 import { INVOICES_EARLIEST, mockInvoices } from "./mockData";
 
 const STATUS_PILL: Record<string, string> = {
@@ -55,7 +56,7 @@ export function InvoicesDashboard() {
         <StatTile label="Outstanding" value={`₹${outstanding.toLocaleString()}`} color="var(--accent)" />
         <StatTile label="Overdue" value={`₹${overdue.toLocaleString()}`} color="var(--critical)" />
         <StatTile label="Paid" value={`₹${paid.toLocaleString()}`} color="var(--mint)" />
-        <StatTile label="Invoices" value={rows.length} />
+        <StatTile label="Invoices" value={rows.length} color={DASHBOARD_META.invoices.color} />
       </StatRow>
 
       <div className="chart-grid">

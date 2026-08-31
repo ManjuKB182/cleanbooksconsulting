@@ -5,6 +5,7 @@ import { DateRangeFilter, presetRange } from "../components/DateRangeFilter";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { chartColors } from "../lib/chartColors";
 import { aggregateMonthly, withinRange } from "./chartUtils";
+import { DASHBOARD_META } from "./dashboardMeta";
 import { RECONCILIATION_EARLIEST, mockReconciliation } from "./mockData";
 
 export function ReconciliationDashboard() {
@@ -31,7 +32,7 @@ export function ReconciliationDashboard() {
         <StatTile label="Gross sales" value={`₹${gross.toLocaleString()}`} />
         <StatTile label="Marketplace fees" value={`₹${fees.toLocaleString()}`} color="var(--warning)" />
         <StatTile label="Net payable" value={`₹${net.toLocaleString()}`} color="var(--mint)" />
-        <StatTile label="Orders pending" value={pending} />
+        <StatTile label="Orders pending" value={pending} color={DASHBOARD_META.reconciliation.color} />
       </StatRow>
 
       <div className="panel chart-panel">
