@@ -1,88 +1,95 @@
-import { StrictMode } from "react";
+import { lazy, StrictMode, Suspense, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { ClientDetail } from "./admin/ClientDetail";
 import { ClientsList } from "./admin/ClientsList";
 import { NewClient } from "./admin/NewClient";
 import { Layout } from "./components/Layout";
-import { CashFlowDashboard } from "./dashboards/CashFlowDashboard";
 import { DashboardsHome } from "./dashboards/DashboardsHome";
-import { InvoicesDashboard } from "./dashboards/InvoicesDashboard";
 import { PodDashboard } from "./dashboards/PodDashboard";
-import { ReconciliationDashboard } from "./dashboards/ReconciliationDashboard";
-import { ReturnsDashboard } from "./dashboards/ReturnsDashboard";
 import "./index.css";
 import { AuthProvider } from "./lib/auth";
 import { Login } from "./routes/Login";
-import { RequireAuth, RequireStaffAdmin } from "./routes/RequireAuth";
+import { RequireClientViewer, RequireStaffAdmin } from "./routes/RequireAuth";
+import { RoleHome } from "./routes/RoleHome";
+
+// recharts is sizeable — code-split it out of the initial bundle (login/admin never need it).
+const ReconciliationDashboard = lazy(() => import("./dashboards/ReconciliationDashboard").then((m) => ({ default: m.ReconciliationDashboard })));
+const InvoicesDashboard = lazy(() => import("./dashboards/InvoicesDashboard").then((m) => ({ default: m.InvoicesDashboard })));
+const ReturnsDashboard = lazy(() => import("./dashboards/ReturnsDashboard").then((m) => ({ default: m.ReturnsDashboard })));
+const CashFlowDashboard = lazy(() => import("./dashboards/CashFlowDashboard").then((m) => ({ default: m.CashFlowDashboard })));
+
+function ChartPage({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<p className="muted">Loading…</p>}>{children}</Suspense>;
+}
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboards" replace />} />
+          <Route path="/" element={<RoleHome />} />
           <Route path="/login" element={<Login />} />
 
           <Route
             path="/dashboards"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
                   <DashboardsHome />
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
           <Route
             path="/dashboards/pod"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
                   <PodDashboard />
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
           <Route
             path="/dashboards/reconciliation"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
-                  <ReconciliationDashboard />
+                  <ChartPage><ReconciliationDashboard /></ChartPage>
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
           <Route
             path="/dashboards/invoices"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
-                  <InvoicesDashboard />
+                  <ChartPage><InvoicesDashboard /></ChartPage>
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
           <Route
             path="/dashboards/returns"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
-                  <ReturnsDashboard />
+                  <ChartPage><ReturnsDashboard /></ChartPage>
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
           <Route
             path="/dashboards/cash-flow"
             element={
-              <RequireAuth>
+              <RequireClientViewer>
                 <Layout>
-                  <CashFlowDashboard />
+                  <ChartPage><CashFlowDashboard /></ChartPage>
                 </Layout>
-              </RequireAuth>
+              </RequireClientViewer>
             }
           />
 
@@ -117,7 +124,7 @@ createRoot(document.getElementById("root")!).render(
             }
           />
 
-          <Route path="*" element={<Navigate to="/dashboards" replace />} />
+          <Route path="*" element={<RoleHome />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

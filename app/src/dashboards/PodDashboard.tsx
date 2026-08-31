@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -10,17 +9,14 @@ export function PodDashboard() {
   const [rows, setRows] = useState<PodStatusRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const isStaffAdmin = session?.role === "staff_admin";
 
   useEffect(() => {
-    if (!session || isStaffAdmin) return;
+    if (!session) return;
     api
       .podDashboard(session.accessToken)
       .then(setRows)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load POD data."));
-  }, [session, isStaffAdmin]);
-
-  if (isStaffAdmin) return <Navigate to="/dashboards" replace />;
+  }, [session]);
 
   const filtered = rows?.filter((row) => {
     const haystack = `${row.invoice_no} ${row.customer_name} ${row.partner} ${row.sku} ${row.lr_number}`.toLowerCase();

@@ -1,25 +1,57 @@
 // Illustrative rows for dashboards whose ingestion pipeline isn't connected yet.
 // Shapes mirror the real fact tables (see cleanbooks-api/app/models/domain_data.py)
-// so swapping this for a live api.* call later is a drop-in change.
+// so swapping this for a live api.* call later is a drop-in change. Built
+// deterministically (no Math.random) so numbers stay stable across reloads.
+
+import { addDaysIso } from "./chartUtils";
+
+const TODAY = "2026-08-31";
+const MONTHS_2026 = ["2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08"];
 
 export interface ReconciliationRow {
   order_id: string;
   marketplace: string;
-  period: string;
+  order_date: string;
   gross_amount: number;
   fees: number;
   net_amount: number;
   status: "settled" | "pending";
 }
 
-export const mockReconciliation: ReconciliationRow[] = [
-  { order_id: "AMZ-88213", marketplace: "Amazon", period: "Aug 2026", gross_amount: 24500, fees: 3675, net_amount: 20825, status: "settled" },
-  { order_id: "FLP-55210", marketplace: "Flipkart", period: "Aug 2026", gross_amount: 18200, fees: 2548, net_amount: 15652, status: "settled" },
-  { order_id: "MYN-11987", marketplace: "Myntra", period: "Aug 2026", gross_amount: 9600, fees: 1440, net_amount: 8160, status: "pending" },
-  { order_id: "NYK-30044", marketplace: "Nykaa", period: "Aug 2026", gross_amount: 5400, fees: 810, net_amount: 4590, status: "pending" },
-  { order_id: "AMZ-88544", marketplace: "Amazon", period: "Jul 2026", gross_amount: 31200, fees: 4680, net_amount: 26520, status: "settled" },
-  { order_id: "FLP-54980", marketplace: "Flipkart", period: "Jul 2026", gross_amount: 12800, fees: 1792, net_amount: 11008, status: "settled" },
+const MARKETPLACES = [
+  { name: "Amazon", base: 24000, feeRate: 0.15 },
+  { name: "Flipkart", base: 18500, feeRate: 0.14 },
+  { name: "Myntra", base: 9800, feeRate: 0.15 },
+  { name: "Nykaa", base: 6200, feeRate: 0.13 },
 ];
+
+function buildReconciliation(): ReconciliationRow[] {
+  const rows: ReconciliationRow[] = [];
+  let seq = 8000;
+  MONTHS_2026.forEach((month, monthIndex) => {
+    const growth = 1 + monthIndex * 0.09;
+    MARKETPLACES.forEach((marketplace, i) => {
+      seq += 1;
+      const day = 4 + i * 6;
+      const gross = Math.round((marketplace.base * growth) / 10) * 10;
+      const fees = Math.round(gross * marketplace.feeRate);
+      const isLatestMonth = monthIndex === MONTHS_2026.length - 1;
+      rows.push({
+        order_id: `${marketplace.name.slice(0, 3).toUpperCase()}-${seq}`,
+        marketplace: marketplace.name,
+        order_date: `${month}-${String(day).padStart(2, "0")}`,
+        gross_amount: gross,
+        fees,
+        net_amount: gross - fees,
+        status: isLatestMonth && i >= 2 ? "pending" : "settled",
+      });
+    });
+  });
+  return rows;
+}
+
+export const mockReconciliation: ReconciliationRow[] = buildReconciliation();
+export const RECONCILIATION_EARLIEST = mockReconciliation[0].order_date;
 
 export interface InvoiceRow {
   invoice_no: string;
@@ -30,40 +62,99 @@ export interface InvoiceRow {
   status: "paid" | "open" | "overdue";
 }
 
-export const mockInvoices: InvoiceRow[] = [
-  { invoice_no: "INV-2026-0142", customer_name: "Northwind Retail Pvt Ltd", invoice_date: "2026-08-01", due_date: "2026-08-15", amount: 48000, status: "paid" },
-  { invoice_no: "INV-2026-0143", customer_name: "Harbor & Co.", invoice_date: "2026-08-05", due_date: "2026-08-20", amount: 32500, status: "open" },
-  { invoice_no: "INV-2026-0144", customer_name: "Acme D2C", invoice_date: "2026-07-18", due_date: "2026-08-01", amount: 21000, status: "overdue" },
-  { invoice_no: "INV-2026-0145", customer_name: "Bluepeak Foods", invoice_date: "2026-08-10", due_date: "2026-08-25", amount: 15750, status: "open" },
-  { invoice_no: "INV-2026-0146", customer_name: "Acme D2C", invoice_date: "2026-08-12", due_date: "2026-08-27", amount: 9800, status: "open" },
-];
+const CUSTOMERS = ["Northwind Retail Pvt Ltd", "Harbor & Co.", "Acme D2C", "Bluepeak Foods", "Coastal Mart", "Aurora Home"];
+
+function buildInvoices(): InvoiceRow[] {
+  const rows: InvoiceRow[] = [];
+  let seq = 100;
+  MONTHS_2026.forEach((month, monthIndex) => {
+    for (let i = 0; i < 3; i++) {
+      seq += 1;
+      const customer = CUSTOMERS[(monthIndex * 3 + i) % CUSTOMERS.length];
+      const day = 3 + i * 9;
+      const invoiceDate = `${month}-${String(day).padStart(2, "0")}`;
+      const dueDate = addDaysIso(invoiceDate, 15);
+      const amount = 8000 + ((monthIndex * 3 + i) % 6) * 4200;
+      let status: InvoiceRow["status"];
+      if (dueDate >= TODAY) status = "open";
+      else status = seq % 3 === 0 ? "overdue" : "paid";
+      rows.push({
+        invoice_no: `INV-2026-${String(seq).padStart(4, "0")}`,
+        customer_name: customer,
+        invoice_date: invoiceDate,
+        due_date: dueDate,
+        amount,
+        status,
+      });
+    }
+  });
+  return rows;
+}
+
+export const mockInvoices: InvoiceRow[] = buildInvoices();
+export const INVOICES_EARLIEST = mockInvoices[0].invoice_date;
 
 export interface ReturnRow {
   return_id: string;
   order_id: string;
   sku: string;
   reason: string;
+  return_date: string;
   refund_amount: number;
   status: "pending" | "approved" | "rejected";
 }
 
-export const mockReturns: ReturnRow[] = [
-  { return_id: "RET-8821", order_id: "AMZ-88213", sku: "CB-TSHIRT-M-BLU", reason: "Size mismatch", refund_amount: 899, status: "approved" },
-  { return_id: "RET-8822", order_id: "FLP-55210", sku: "CB-MUG-CERAMIC", reason: "Damaged in transit", refund_amount: 449, status: "approved" },
-  { return_id: "RET-8823", order_id: "MYN-11987", sku: "CB-TOTE-CANVAS", reason: "Changed mind", refund_amount: 599, status: "pending" },
-  { return_id: "RET-8824", order_id: "NYK-30044", sku: "CB-CANDLE-LAV", reason: "Wrong item shipped", refund_amount: 349, status: "rejected" },
-];
+const RETURN_REASONS = ["Size mismatch", "Damaged in transit", "Changed mind", "Wrong item shipped", "Quality issue", "Late delivery"];
+const SKUS = ["CB-TSHIRT-M-BLU", "CB-MUG-CERAMIC", "CB-TOTE-CANVAS", "CB-CANDLE-LAV", "CB-NOTEBOOK-A5", "CB-BOTTLE-STL"];
+const STATUS_CYCLE: ReturnRow["status"][] = ["approved", "approved", "pending", "rejected"];
+
+function buildReturns(): ReturnRow[] {
+  const rows: ReturnRow[] = [];
+  let seq = 8800;
+  MONTHS_2026.forEach((month, monthIndex) => {
+    for (let i = 0; i < 3; i++) {
+      seq += 1;
+      const idx = monthIndex * 3 + i;
+      const day = 5 + i * 8;
+      rows.push({
+        return_id: `RET-${seq}`,
+        order_id: `${MARKETPLACES[idx % MARKETPLACES.length].name.slice(0, 3).toUpperCase()}-${8000 + idx}`,
+        sku: SKUS[idx % SKUS.length],
+        reason: RETURN_REASONS[idx % RETURN_REASONS.length],
+        return_date: `${month}-${String(day).padStart(2, "0")}`,
+        refund_amount: 299 + (idx % 5) * 150,
+        status: STATUS_CYCLE[idx % STATUS_CYCLE.length],
+      });
+    }
+  });
+  return rows;
+}
+
+export const mockReturns: ReturnRow[] = buildReturns();
+export const RETURNS_EARLIEST = mockReturns[0].return_date;
 
 export interface CashFlowRow {
   period: string;
+  period_date: string;
   inflow: number;
   outflow: number;
   net: number;
 }
 
-export const mockCashFlow: CashFlowRow[] = [
-  { period: "May 2026", inflow: 412000, outflow: 356000, net: 56000 },
-  { period: "Jun 2026", inflow: 468000, outflow: 401000, net: 67000 },
-  { period: "Jul 2026", inflow: 501000, outflow: 447000, net: 54000 },
-  { period: "Aug 2026", inflow: 489000, outflow: 462000, net: 27000 },
-];
+function buildCashFlow(): CashFlowRow[] {
+  const base = { inflow: 340000, outflow: 298000 };
+  return MONTHS_2026.map((month, i) => {
+    const inflow = Math.round((base.inflow * (1 + i * 0.08)) / 1000) * 1000;
+    const outflow = Math.round((base.outflow * (1 + i * 0.075)) / 1000) * 1000;
+    return {
+      period: new Date(`${month}-01T00:00:00Z`).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" }),
+      period_date: `${month}-01`,
+      inflow,
+      outflow,
+      net: inflow - outflow,
+    };
+  });
+}
+
+export const mockCashFlow: CashFlowRow[] = buildCashFlow();
+export const CASH_FLOW_EARLIEST = mockCashFlow[0].period_date;

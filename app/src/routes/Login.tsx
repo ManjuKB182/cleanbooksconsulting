@@ -11,7 +11,8 @@ export function Login() {
   const [error, setError] = useState<string | null>(null);
 
   if (session) {
-    const redirectTo = (location.state as { from?: string } | null)?.from ?? "/dashboards";
+    const defaultPath = session.role === "staff_admin" ? "/admin" : "/dashboards";
+    const redirectTo = (location.state as { from?: string } | null)?.from ?? defaultPath;
     return <Navigate to={redirectTo} replace />;
   }
 

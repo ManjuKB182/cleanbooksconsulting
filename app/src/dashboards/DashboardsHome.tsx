@@ -16,27 +16,14 @@ export function DashboardsHome() {
   const { session } = useAuth();
   const [dashboards, setDashboards] = useState<DashboardSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const isStaffAdmin = session?.role === "staff_admin";
 
   useEffect(() => {
-    if (!session || isStaffAdmin) return;
+    if (!session) return;
     api
       .listDashboards(session.accessToken)
       .then(setDashboards)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Could not load dashboards."));
-  }, [session, isStaffAdmin]);
-
-  if (isStaffAdmin) {
-    return (
-      <div>
-        <h1>Dashboards</h1>
-        <p className="muted">
-          Staff accounts don't have a dashboard view of their own — dashboards belong to a client. Open a
-          client from <Link to="/admin">Admin</Link> to manage what they see.
-        </p>
-      </div>
-    );
-  }
+  }, [session]);
 
   return (
     <div>
