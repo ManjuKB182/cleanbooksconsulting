@@ -1,6 +1,7 @@
 import { lazy, StrictMode, Suspense, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 
 import { ClientDetail } from "./admin/ClientDetail";
 import { ClientsList } from "./admin/ClientsList";
@@ -28,6 +29,7 @@ function ChartPage({ children }: { children: ReactNode }) {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
+      <Toaster position="bottom-right" richColors closeButton />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RoleHome />} />

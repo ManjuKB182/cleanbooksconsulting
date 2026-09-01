@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { DASHBOARD_META } from "../dashboards/dashboardMeta";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
@@ -9,6 +9,7 @@ export function DashboardShell() {
   const { session, logout } = useAuth();
   const [dashboards, setDashboards] = useState<DashboardSummary[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const location = useLocation();
 
   useEffect(() => {
     if (!session) return;
@@ -73,7 +74,9 @@ export function DashboardShell() {
       </aside>
 
       <main className="dash-main">
-        <Outlet context={dashboards} />
+        <div key={location.pathname} className="dash-page-enter">
+          <Outlet context={dashboards} />
+        </div>
       </main>
     </div>
   );

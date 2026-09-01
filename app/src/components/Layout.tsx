@@ -26,7 +26,9 @@ export function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
       </header>
-      <main className="content">{children}</main>
+      <main className="content" key={location.pathname}>
+        <div className="dash-page-enter">{children}</div>
+      </main>
     </div>
   );
 }

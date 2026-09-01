@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 
@@ -27,6 +28,7 @@ export function NewClient() {
     setError(null);
     try {
       const client = await api.createClient(session.accessToken, name, slug);
+      toast.success(`${client.name} onboarded`);
       navigate(`/admin/clients/${client.id}`);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not create client.");

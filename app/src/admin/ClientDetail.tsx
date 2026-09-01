@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { DashboardSummary, IngestionSource } from "../lib/types";
@@ -18,7 +19,6 @@ export function ClientDetail() {
 
   const [dashboards, setDashboards] = useState<DashboardSummary[] | null>(null);
   const [source, setSource] = useState<IngestionSource | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
 
   const gmailCallback = searchParams.get("gmail");
@@ -54,12 +54,13 @@ export function ClientDetail() {
 
   async function toggle(dashboard: DashboardSummary) {
     if (!session) return;
-    setError(null);
+    const nextEnabled = !dashboard.enabled;
     try {
-      await api.setAccess(session.accessToken, id, dashboard.id, !dashboard.enabled);
+      await api.setAccess(session.accessToken, id, dashboard.id, nextEnabled);
       load();
+      toast.success(`${dashboard.name} ${nextEnabled ? "enabled" : "disabled"}`);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not update access.");
+      toast.error(err instanceof ApiError ? err.message : "Could not update access.");
     }
   }
 
@@ -70,7 +71,7 @@ export function ClientDetail() {
       const { authorization_url } = await api.startGmailOAuth(session.accessToken, id);
       window.location.href = authorization_url;
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not start the Gmail connection.");
+      toast.error(err instanceof ApiError ? err.message : "Could not start the Gmail connection.");
       setConnecting(false);
     }
   }
@@ -79,7 +80,6 @@ export function ClientDetail() {
     <div>
       <h1>Client #{id}</h1>
       {gmailMessage && <p className={`callout callout-${gmailMessage.tone}`}>{gmailMessage.text}</p>}
-      {error && <p className="error-text">{error}</p>}
 
       <section className="panel">
         <h2>Gmail connection</h2>
