@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     try {
       const result = await api.login(email, password);
-      setSession({ accessToken: result.access_token, role: result.role as AuthSession["role"], clientId: result.client_id });
+      setSession({ accessToken: result.access_token, role: result.role as AuthSession["role"], clientId: result.client_id, email });
     } finally {
       setLoading(false);
     }

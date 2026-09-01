@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { ArrowLeftIcon, BuildingIcon, MailIcon } from "../components/icons";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
-import type { DashboardSummary, IngestionSource } from "../lib/types";
+import type { Client, DashboardSummary, IngestionSource } from "../lib/types";
 
 const GMAIL_CALLBACK_MESSAGE: Record<string, { tone: "ok" | "warn" | "error"; text: string }> = {
   connected: { tone: "ok", text: "Gmail connected. Ingestion will pick up this mailbox on the next scheduled run." },
@@ -19,6 +20,7 @@ export function ClientDetail() {
 
   const [dashboards, setDashboards] = useState<DashboardSummary[] | null>(null);
   const [source, setSource] = useState<IngestionSource | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [connecting, setConnecting] = useState(false);
 
   const gmailCallback = searchParams.get("gmail");
@@ -40,6 +42,10 @@ export function ClientDetail() {
   const load = useCallback(() => {
     if (!session || !id) return;
     api.listDashboards(session.accessToken, id).then(setDashboards).catch(() => setDashboards([]));
+    api
+      .listClients(session.accessToken)
+      .then((clients) => setClient(clients.find((c) => c.id === id) ?? null))
+      .catch(() => setClient(null));
     api
       .getIngestionSource(session.accessToken, id)
       .then(setSource)
@@ -78,11 +84,28 @@ export function ClientDetail() {
 
   return (
     <div>
-      <h1>Client #{id}</h1>
+      <Link to="/admin" className="breadcrumb">
+        <ArrowLeftIcon />
+        Clients
+      </Link>
+      <div className="page-header">
+        <div>
+          <h1>{client?.name ?? `Client #${id}`}</h1>
+          <div className="detail-subline">
+            {client?.slug && <code>{client.slug}</code>}
+            {client?.status && <span className="pill pill-on">{client.status}</span>}
+          </div>
+        </div>
+      </div>
       {gmailMessage && <p className={`callout callout-${gmailMessage.tone}`}>{gmailMessage.text}</p>}
 
       <section className="panel">
-        <h2>Gmail connection</h2>
+        <div className="panel-head">
+          <span className="panel-icon">
+            <MailIcon />
+          </span>
+          <h2>Gmail connection</h2>
+        </div>
         {source?.status === "connected" ? (
           <p>
             Connected to <b>{source.mailbox_email}</b> since {new Date(source.connected_at ?? "").toLocaleString()}.
@@ -99,8 +122,13 @@ export function ClientDetail() {
         )}
       </section>
 
-      <section className="panel">
-        <h2>Dashboard access</h2>
+      <section className="panel panel-delay-1">
+        <div className="panel-head">
+          <span className="panel-icon">
+            <BuildingIcon />
+          </span>
+          <h2>Dashboard access</h2>
+        </div>
         <table>
           <thead>
             <tr>

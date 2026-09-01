@@ -1,6 +1,8 @@
 // Minimal line-icon set for KPI tiles. 20x20, stroke=currentColor, no fill — kept
 // deliberately small (one file, ~10 icons) rather than pulling in an icon library.
-import type { SVGProps } from "react";
+import type { ReactElement, SVGProps } from "react";
+
+export type IconComponent = (props: SVGProps<SVGSVGElement>) => ReactElement;
 
 const base = {
   viewBox: "0 0 20 20",
@@ -111,6 +113,83 @@ export function ReceiptIcon(props: SVGProps<SVGSVGElement>) {
     <svg {...base} {...props}>
       <path d="M5 2.6h10v14.8l-2-1.3-1.5 1.3-1.5-1.3-1.5 1.3L7 16.1l-2 1.3V2.6Z" />
       <path d="M7.3 6.5h5.4M7.3 9.3h5.4M7.3 12.1h3.4" />
+    </svg>
+  );
+}
+
+export function ArrowLeftIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M16 10H4" />
+      <path d="M8.5 5.5 4 10l4.5 4.5" />
+    </svg>
+  );
+}
+
+export function MailIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3 5.2h14v9.6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5.2Z" />
+      <path d="m3.3 5.6 6.7 5.4 6.7-5.4" />
+    </svg>
+  );
+}
+
+export function BuildingIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4.5 17.4V3.6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v13.8" />
+      <path d="M14.5 17.4V8.2h2.1a1 1 0 0 1 1 1v8.2" />
+      <path d="M7.2 6h1.4M7.2 9h1.4M7.2 12h1.4" />
+      <path d="M2.5 17.4h15" />
+    </svg>
+  );
+}
+
+export function InboxIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M2.6 11.2 5 4.4a1 1 0 0 1 .94-.66h8.12a1 1 0 0 1 .94.66l2.4 6.8" />
+      <path d="M2.6 11.2h4.3l1 2h4.2l1-2h4.3v4.4a1 1 0 0 1-1 1H3.6a1 1 0 0 1-1-1v-4.4Z" />
+    </svg>
+  );
+}
+
+export function RefreshIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M16.5 10a6.5 6.5 0 0 1-11.2 4.5L3.5 12.7" />
+      <path d="M3.5 10a6.5 6.5 0 0 1 11.2-4.5L16.5 7.3" />
+      <path d="M3.5 12.7v3.1h3.1" />
+      <path d="M16.5 7.3V4.2h-3.1" />
+    </svg>
+  );
+}
+
+export function DownloadIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M10 3v9.5" />
+      <path d="m6.2 9.2 3.8 3.8 3.8-3.8" />
+      <path d="M3.5 15.5v1a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-1" />
+    </svg>
+  );
+}
+
+export function SearchIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="8.8" cy="8.8" r="5.3" />
+      <path d="m16.2 16.2-3.9-3.9" />
+    </svg>
+  );
+}
+
+export function LockIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="4.5" y="9" width="11" height="8" rx="1.6" />
+      <path d="M6.8 9V6.3a3.2 3.2 0 0 1 6.4 0V9" />
     </svg>
   );
 }

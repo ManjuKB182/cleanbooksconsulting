@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { LockIcon } from "../components/icons";
 import { ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 
@@ -28,16 +29,28 @@ export function Login() {
 
   return (
     <div className="auth-page">
+      <div className="auth-brand">
+        <span className="auth-mark">CB</span>
+        <div className="auth-brand-text">
+          <span className="auth-brand-name">CleanBooks</span>
+          <span className="auth-brand-tag">Portal</span>
+        </div>
+      </div>
+
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h1>Sign in</h1>
-        <p className="muted">Access your CleanBooks dashboards and admin tools.</p>
+        <span className="auth-eyebrow">
+          <LockIcon width={12} height={12} />
+          Secure access
+        </span>
+        <h1>Portal Login</h1>
+        <p className="muted">Sign in to access the workspace assigned to your account.</p>
         <label>
           Email
-          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+          <input type="email" required placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
         </label>
         <label>
           Password
-          <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="password" required placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
         {error && <p className="error-text">{error}</p>}
         <button type="submit" className="btn-primary" disabled={loading}>

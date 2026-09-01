@@ -4,6 +4,7 @@ export interface AuthSession {
   accessToken: string;
   role: Role;
   clientId: number | null;
+  email: string;
 }
 
 export interface DashboardSummary {

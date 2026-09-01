@@ -30,7 +30,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <Toaster position="bottom-right" richColors closeButton />
-      <BrowserRouter>
+      <BrowserRouter basename="/portal">
         <Routes>
           <Route path="/" element={<RoleHome />} />
           <Route path="/login" element={<Login />} />

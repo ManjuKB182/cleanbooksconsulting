@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { DASHBOARD_META } from "../dashboards/dashboardMeta";
+import { AlertIcon } from "./icons";
+import { DASHBOARD_ICON, DASHBOARD_META } from "../dashboards/dashboardMeta";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 import type { DashboardSummary } from "../lib/types";
+
+function initials(email: string | undefined): string {
+  if (!email) return "?";
+  const name = email.split("@")[0] ?? email;
+  const parts = name.split(/[._-]/).filter(Boolean);
+  const chars = parts.length >= 2 ? [parts[0][0], parts[1][0]] : [name.slice(0, 2)];
+  return chars.join("").toUpperCase();
+}
 
 export function DashboardShell() {
   const { session, logout } = useAuth();
@@ -24,52 +33,58 @@ export function DashboardShell() {
       <aside className="dash-sidebar">
         <div className="dash-sidebar-brand">
           <span className="dash-brand-mark">CB</span>
-          <div>
-            <div className="dash-brand-name">CleanBooks</div>
-            <div className="dash-brand-sub">Client Portal</div>
-          </div>
+          <div className="dash-brand-name">CleanBooks</div>
         </div>
 
         <nav className="dash-nav">
-          {!dashboards && !error && <p className="dash-nav-error">Loading…</p>}
-          {error && <p className="dash-nav-error">{error}</p>}
+          {!dashboards && !error && <p className="dash-nav-loading">Loading…</p>}
+          {error && (
+            <p className="dash-nav-error">
+              <AlertIcon />
+              {error}
+            </p>
+          )}
           {dashboards?.map((d) => {
             const meta = DASHBOARD_META[d.key];
-            if (!meta) return null;
+            const Icon = DASHBOARD_ICON[d.key];
+            if (!meta || !Icon) return null;
 
             if (!d.enabled) {
               return (
                 <div key={d.id} className="dash-nav-item disabled" title="Not enabled for your account">
-                  <span className="dash-badge" style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}>
-                    {meta.code}
+                  <span className="dash-nav-icon">
+                    <Icon />
                   </span>
-                  <div className="dash-nav-text">
-                    <div className="dash-nav-name">{d.name}</div>
-                    <div className="dash-nav-desc">Not enabled</div>
-                  </div>
+                  <span className="dash-nav-name">{d.name}</span>
                 </div>
               );
             }
 
             return (
               <NavLink key={d.id} to={meta.route} className={({ isActive }) => `dash-nav-item ${isActive ? "active" : ""}`}>
-                <span className="dash-badge" style={{ background: meta.color }}>
-                  {meta.code}
+                <span className="dash-nav-icon">
+                  <Icon />
                 </span>
-                <div className="dash-nav-text">
-                  <div className="dash-nav-name">{d.name}</div>
-                  <div className="dash-nav-desc">{d.description}</div>
-                </div>
+                <span className="dash-nav-name">{d.name}</span>
               </NavLink>
             );
           })}
         </nav>
 
         <div className="dash-sidebar-footer">
-          <div className="dash-sync-note">Refreshed every 2 hours</div>
-          <button type="button" className="dash-signout" onClick={logout}>
-            Sign out
-          </button>
+          {session && (
+            <div className="dash-profile">
+              <span className="dash-avatar">{initials(session.email)}</span>
+              <span className="dash-profile-email">{session.email}</span>
+              <button type="button" className="dash-signout" onClick={logout} title="Sign out" aria-label="Sign out">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7.5 17.5H4a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1h3.5" />
+                  <path d="M13 14l4-4-4-4" />
+                  <path d="M17 10H7.5" />
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { ArrowLeftIcon } from "../components/icons";
 import { api, ApiError } from "../lib/api";
 import { useAuth } from "../lib/auth";
 
@@ -39,39 +40,68 @@ export function NewClient() {
 
   return (
     <div>
+      <Link to="/admin" className="breadcrumb">
+        <ArrowLeftIcon />
+        Clients
+      </Link>
       <h1>Onboard a client</h1>
-      <p className="muted">
-        Step 1 of the onboarding flow: create the client record. Dashboard access and their Gmail connection
-        happen next, on the client's detail page.
-      </p>
-      <form className="form-card" onSubmit={handleSubmit}>
-        <label>
-          Client name
-          <input
-            required
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              if (!slugTouched) setSlug(slugify(e.target.value));
-            }}
-          />
-        </label>
-        <label>
-          Slug
-          <input
-            required
-            value={slug}
-            onChange={(e) => {
-              setSlug(slugify(e.target.value));
-              setSlugTouched(true);
-            }}
-          />
-        </label>
-        {error && <p className="error-text">{error}</p>}
-        <button type="submit" className="btn-primary" disabled={submitting}>
-          {submitting ? "Creating…" : "Create client"}
-        </button>
-      </form>
+      <p className="muted">Create the client record, then connect their mailbox and turn on dashboards from the detail page.</p>
+
+      <div className="onboard-layout">
+        <form className="form-card" onSubmit={handleSubmit}>
+          <label>
+            Client name
+            <input
+              required
+              autoFocus
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (!slugTouched) setSlug(slugify(e.target.value));
+              }}
+            />
+          </label>
+          <label>
+            Slug
+            <input
+              required
+              value={slug}
+              onChange={(e) => {
+                setSlug(slugify(e.target.value));
+                setSlugTouched(true);
+              }}
+            />
+          </label>
+          {error && <p className="error-text">{error}</p>}
+          <button type="submit" className="btn-primary" disabled={submitting}>
+            {submitting ? "Creating…" : "Create client"}
+          </button>
+        </form>
+
+        <ol className="steps-panel">
+          <li className="steps-item steps-item-current">
+            <span className="steps-index">1</span>
+            <div>
+              <p className="steps-title">Create the client</p>
+              <p className="steps-desc">Name and a URL-friendly slug — that's all it takes to get started.</p>
+            </div>
+          </li>
+          <li className="steps-item">
+            <span className="steps-index">2</span>
+            <div>
+              <p className="steps-title">Connect their mailbox</p>
+              <p className="steps-desc">Authorize Gmail so ingestion can start pulling statements and invoices.</p>
+            </div>
+          </li>
+          <li className="steps-item">
+            <span className="steps-index">3</span>
+            <div>
+              <p className="steps-title">Turn on dashboards</p>
+              <p className="steps-desc">Enable the reports this client should see — the rest stay hidden.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
     </div>
   );
 }

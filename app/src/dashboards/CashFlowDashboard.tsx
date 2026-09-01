@@ -1,19 +1,23 @@
 import { useMemo, useState } from "react";
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { DateRangeFilter, presetRange } from "../components/DateRangeFilter";
-import { DemoNotice } from "../components/DemoBadge";
-import { CheckCircleIcon, ClockIcon, PercentIcon, TagIcon, TrendingUpIcon, WalletIcon } from "../components/icons";
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { DataTable } from "../components/DataTable";
+import { DashboardHeader } from "../components/DashboardHeader";
+import { FilterBar, presetRange } from "../components/FilterBar";
+import { ClockIcon, PercentIcon, TagIcon, TrendingUpIcon } from "../components/icons";
 import { StatRow, StatTile } from "../components/StatTiles";
 import { chartColors } from "../lib/chartColors";
+import { downloadCsv } from "../lib/csv";
+import { useRefreshable } from "../lib/useRefreshable";
 import { withinRange } from "./chartUtils";
-import { DASHBOARD_META } from "./dashboardMeta";
 import { CASH_FLOW_EARLIEST, mockCashFlow } from "./mockData";
 
 export function CashFlowDashboard() {
   const [range, setRange] = useState(() => presetRange(null, CASH_FLOW_EARLIEST));
-  const rows = useMemo(() => mockCashFlow.filter((r) => withinRange(r.period_date, range)), [range]);
+  const { refreshing, refresh } = useRefreshable(() => new Promise((resolve) => setTimeout(resolve, 500)));
 
-  const latest = rows[rows.length - 1];
+  const rows = useMemo(() => mockCashFlow.filter((r) => withinRange(r.period_date, range)), [range]);
+  const latest = useMemo(() => [...rows].reverse().slice(0, 8), [rows]);
+
   const totalInflow = rows.reduce((sum, r) => sum + r.inflow, 0);
   const totalOutflow = rows.reduce((sum, r) => sum + r.outflow, 0);
   const totalNet = totalInflow - totalOutflow;
@@ -23,31 +27,62 @@ export function CashFlowDashboard() {
 
   return (
     <div>
-      <h1>Cash Flow Summary</h1>
-      <DemoNotice dashboardKey="cash_flow" />
+      <DashboardHeader
+        title="Cash Flow Summary"
+        meta={`${rows.length} months tracked · ₹${totalNet.toLocaleString()} net`}
+        demo
+        onExport={() =>
+          downloadCsv(
+            "cash-flow.csv",
+            [
+              { key: "period", header: "Period" },
+              { key: "inflow", header: "Inflow" },
+              { key: "outflow", header: "Outflow" },
+              { key: "net", header: "Net" },
+            ],
+            rows
+          )
+        }
+        onRefresh={refresh}
+        refreshing={refreshing}
+      />
 
-      <DateRangeFilter range={range} onChange={setRange} earliest={CASH_FLOW_EARLIEST} defaultPreset="All" />
+      <FilterBar range={range} onChange={setRange} earliest={CASH_FLOW_EARLIEST} defaultPreset="All" />
 
       <StatRow>
-        <StatTile label={latest ? `Net (${latest.period})` : "Net"} value={latest ? `₹${latest.net.toLocaleString()}` : "—"} color="var(--mint)" icon={<CheckCircleIcon />} />
-        <StatTile label="Total inflow" value={`₹${totalInflow.toLocaleString()}`} color="var(--accent)" icon={<WalletIcon />} />
-        <StatTile label="Total outflow" value={`₹${totalOutflow.toLocaleString()}`} color="var(--warning)" icon={<TrendingUpIcon />} />
-        <StatTile label="Avg monthly net" value={`₹${avgNet.toLocaleString()}`} color={DASHBOARD_META.cash_flow.color} icon={<TrendingUpIcon />} />
-        <StatTile label="Net margin" value={`${margin}%`} color="#7c3aed" icon={<PercentIcon />} />
+        <StatTile label="Avg monthly net" value={`₹${avgNet.toLocaleString()}`} icon={<TrendingUpIcon />} />
+        <StatTile label="Net margin" value={`${margin}%`} icon={<PercentIcon />} />
         <StatTile
           label="Best month"
           value={bestMonth?.period ?? "—"}
           sub={bestMonth ? `₹${bestMonth.net.toLocaleString()} net` : undefined}
-          color="#db2777"
           icon={<TagIcon />}
         />
-        <StatTile label="Months tracked" value={rows.length} color="var(--accent)" icon={<ClockIcon />} />
+        <StatTile label="Months tracked" value={rows.length} icon={<ClockIcon />} />
       </StatRow>
+
+      <DataTable
+        title="By month"
+        meta="Inflow, outflow, and net for the selected range"
+        columns={[
+          { key: "period", header: "Period" },
+          { key: "inflow", header: "Inflow", align: "right", render: (r) => `₹${r.inflow.toLocaleString()}` },
+          { key: "outflow", header: "Outflow", align: "right", render: (r) => `₹${r.outflow.toLocaleString()}` },
+          {
+            key: "net",
+            header: "Net",
+            align: "right",
+            render: (r) => <span style={r.net < 0 ? { color: "var(--critical)", fontWeight: 600 } : { color: "var(--accent-dark)", fontWeight: 600 }}>₹{r.net.toLocaleString()}</span>,
+          },
+        ]}
+        rows={rows}
+        rowKey={(r) => r.period}
+      />
 
       <div className="chart-grid">
         <div className="panel chart-panel">
           <h2>Inflow vs. outflow trend</h2>
-          <ResponsiveContainer width="100%" height={190}>
+          <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={rows} margin={{ top: 4, right: 12, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="inflowFill" x1="0" y1="0" x2="0" y2="1">
@@ -73,21 +108,30 @@ export function CashFlowDashboard() {
 
         <div className="panel chart-panel">
           <h2>Net by month</h2>
-          <ResponsiveContainer width="100%" height={190}>
+          <ResponsiveContainer width="100%" height={200}>
             <BarChart data={rows} margin={{ top: 4, right: 12, left: 0, bottom: 0 }}>
               <CartesianGrid stroke={chartColors.grid} vertical={false} />
               <XAxis dataKey="period" tick={{ fontSize: 11, fill: chartColors.muted }} axisLine={{ stroke: chartColors.grid }} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: chartColors.muted }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${(v / 1000).toFixed(0)}k`} />
               <Tooltip formatter={(v) => `₹${Number(v).toLocaleString()}`} contentStyle={{ borderRadius: 8, borderColor: chartColors.grid, fontSize: 13 }} />
-              <Bar isAnimationActive={false} dataKey="net" name="Net" radius={[4, 4, 0, 0]}>
-                {rows.map((r) => (
-                  <Cell key={r.period} fill={r.net >= 0 ? chartColors.mint : chartColors.critical} />
-                ))}
-              </Bar>
+              <Bar isAnimationActive={false} dataKey="net" name="Net" fill={chartColors.mint} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
+
+      <DataTable
+        title="Latest data"
+        meta={`Most recent ${latest.length} of ${rows.length} months`}
+        columns={[
+          { key: "period", header: "Period" },
+          { key: "inflow", header: "Inflow", align: "right", render: (r) => `₹${r.inflow.toLocaleString()}` },
+          { key: "outflow", header: "Outflow", align: "right", render: (r) => `₹${r.outflow.toLocaleString()}` },
+          { key: "net", header: "Net", align: "right", render: (r) => `₹${r.net.toLocaleString()}` },
+        ]}
+        rows={latest}
+        rowKey={(r) => r.period}
+      />
     </div>
   );
 }

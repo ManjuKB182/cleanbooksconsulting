@@ -11,6 +11,7 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="shell">
       <header className="topbar">
         <Link to="/admin" className="brand">
+          <span className="topbar-mark">CB</span>
           CleanBooks
         </Link>
         <nav className="topnav">
