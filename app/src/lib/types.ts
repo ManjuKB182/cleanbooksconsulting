@@ -25,6 +25,20 @@ export interface PodStatusRow {
   pod_received: boolean;
 }
 
+/** One (vendor, day) GRN rollup from dashboards.invoice. */
+export interface InvoiceLifecycleRow {
+  vendor_gstin: string;
+  vendor_name: string | null;
+  txn_date: string;
+  po_count: number;
+  total_taxable_value: number;
+  total_cgst_amount: number;
+  total_sgst_amount: number;
+  total_igst_amount: number;
+  total_cess_amount: number;
+  total_amount: number;
+}
+
 export interface Client {
   id: number;
   name: string;

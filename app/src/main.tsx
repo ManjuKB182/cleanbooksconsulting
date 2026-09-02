@@ -19,6 +19,9 @@ import { RoleHome } from "./routes/RoleHome";
 const PodDashboard = lazy(() => import("./dashboards/PodDashboard").then((m) => ({ default: m.PodDashboard })));
 const ReconciliationDashboard = lazy(() => import("./dashboards/ReconciliationDashboard").then((m) => ({ default: m.ReconciliationDashboard })));
 const InvoicesDashboard = lazy(() => import("./dashboards/InvoicesDashboard").then((m) => ({ default: m.InvoicesDashboard })));
+const InvoiceLifecycleDashboard = lazy(() =>
+  import("./dashboards/InvoiceLifecycleDashboard").then((m) => ({ default: m.InvoiceLifecycleDashboard }))
+);
 const ReturnsDashboard = lazy(() => import("./dashboards/ReturnsDashboard").then((m) => ({ default: m.ReturnsDashboard })));
 const CashFlowDashboard = lazy(() => import("./dashboards/CashFlowDashboard").then((m) => ({ default: m.CashFlowDashboard })));
 
@@ -65,6 +68,14 @@ createRoot(document.getElementById("root")!).render(
               element={
                 <ChartPage>
                   <InvoicesDashboard />
+                </ChartPage>
+              }
+            />
+            <Route
+              path="invoice-lifecycle"
+              element={
+                <ChartPage>
+                  <InvoiceLifecycleDashboard />
                 </ChartPage>
               }
             />

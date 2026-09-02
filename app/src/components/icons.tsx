@@ -185,6 +185,17 @@ export function SearchIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function CycleIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 10a6 6 0 0 1 10.2-4.3L16 7.3" />
+      <path d="M16 3.6v3.7h-3.7" />
+      <path d="M16 10a6 6 0 0 1-10.2 4.3L4 12.7" />
+      <path d="M4 16.4v-3.7h3.7" />
+    </svg>
+  );
+}
+
 export function LockIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg {...base} {...props}>

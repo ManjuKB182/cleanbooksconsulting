@@ -1,6 +1,6 @@
 // Talks to cleanbooks-api. In dev, Vite proxies /api to the local FastAPI server
 // (see vite.config.ts); in production this is the deployed API's own origin.
-import type { Client, DashboardSummary, IngestionSource, PodStatusRow } from "./types";
+import type { Client, DashboardSummary, IngestionSource, InvoiceLifecycleRow, PodStatusRow } from "./types";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -40,6 +40,9 @@ export const api = {
 
   podDashboard: (token: string, clientId?: number) =>
     request<PodStatusRow[]>(`/api/dashboards/pod${clientId ? `?client_id=${clientId}` : ""}`, {}, token),
+
+  invoiceLifecycleDashboard: (token: string, clientId?: number) =>
+    request<InvoiceLifecycleRow[]>(`/api/dashboards/invoice-lifecycle${clientId ? `?client_id=${clientId}` : ""}`, {}, token),
 
   listClients: (token: string) => request<Client[]>("/api/admin/clients", {}, token),
 
