@@ -19,6 +19,25 @@
   --bg-dark: #071D33;
   --white: #FFFFFF;
   --border: #E2E8F0;
+
+  /* strong custom ease-out for press feedback — matches the dashboard app */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Jumping straight to a #section via a nav link: reveal AOS content for that
+   frame without the fade — it's a deliberate landing, not a scroll discovery. */
+html.aos-jump [data-aos] {
+  transition-duration: 0.01ms !important;
+  animation-duration: 0.01ms !important;
 }
 
 /* ---- Base ---- */
@@ -113,7 +132,7 @@ a:hover { color: var(--primary-dark); }
   border-bottom: 2px solid var(--accent);
 }
 
-.pod-dashboard-link {
+.portal-login-link {
   background: var(--primary);
   border-radius: 8px;
   color: var(--white) !important;
@@ -127,20 +146,21 @@ a:hover { color: var(--primary-dark); }
   background:
     linear-gradient(90deg, rgba(7,29,51,0.92), rgba(11,42,74,0.82), rgba(11,42,74,0.55)),
     url('../images/image2.jpg') center/cover no-repeat;
+  color: var(--white);
   padding: 88px 0 72px;
-}
-
-.modern-hero::before {
-  display: none;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero-highlight { color: var(--mint); }
 
 .modern-hero h1 {
+  color: var(--white);
   font-size: 3.15rem;
   line-height: 1.06;
   letter-spacing: 0;
   text-shadow: none;
+  margin-bottom: 1.25rem;
   max-width: 680px;
 }
 
@@ -149,6 +169,36 @@ a:hover { color: var(--primary-dark); }
   text-shadow: none;
   color: rgba(255,255,255,0.86);
   max-width: 690px;
+  margin-bottom: 2rem;
+}
+
+.modern-hero .badge-pill {
+  display: inline-block;
+  background: rgba(111, 211, 167, 0.12);
+  border: 1px solid rgba(111, 211, 167, 0.35);
+  color: #D1FAE5;
+  border-radius: 20px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.82rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.modern-hero .btn-outline-light {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 8px;
+  color: var(--white);
+  padding: 0.7rem 1.8rem;
+}
+
+.modern-hero .btn-outline-light:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.65);
+  color: var(--white);
 }
 
 .hero-actions,
@@ -247,16 +297,6 @@ a:hover { color: var(--primary-dark); }
   font-size: 1.05rem;
 }
 
-.mockup-search,
-.standalone-search {
-  background: var(--bg-light);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-muted);
-  font-size: 0.84rem;
-  padding: 0.65rem 0.8rem;
-}
-
 .mockup-filter-row {
   display: flex;
   gap: 0.5rem;
@@ -274,26 +314,10 @@ a:hover { color: var(--primary-dark); }
   white-space: nowrap;
 }
 
-.standalone-search.mockup-filter-row {
-  background: transparent;
-  border: 0;
-  padding: 0;
-}
-
-.standalone-search {
-  display: inline-block;
-  margin-top: 0.5rem;
-}
-
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-}
-
-.metric-grid.compact {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-bottom: 1rem;
 }
 
 .metric-grid div {
@@ -397,8 +421,130 @@ a:hover { color: var(--primary-dark); }
 .status-chip.medium { background: #DBEAFE; color: #1D4ED8; }
 .status-chip.low { background: #DCFCE7; color: #15803D; }
 
-#dashboard .mini-table-row {
-  grid-template-columns: 0.9fr repeat(5, 1fr);
+/* ---- "What We Offer" tabs (Solutions / Dashboards / Process) ----
+   One section instead of three back-to-back ones — a segmented control keeps
+   all three reachable without tripling the page's scroll length. */
+.offer-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 0 0 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.offer-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 0.9rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, transform 120ms var(--ease-out);
+}
+
+.offer-tab:active {
+  transform: scale(0.97);
+  transition-duration: 70ms;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .offer-tab:not(.active):hover {
+    color: var(--primary);
+  }
+}
+
+.offer-tab.active {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+
+.offer-panel {
+  animation: offerPanelIn 220ms var(--ease-out) both;
+}
+
+@keyframes offerPanelIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.dashboard-offer-card {
+  display: block;
+  height: 100%;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.75rem 1.5rem;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+
+.dashboard-offer-card:hover {
+  box-shadow: 0 8px 30px rgba(30, 136, 229, 0.12);
+  transform: translateY(-4px);
+}
+
+.dashboard-offer-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background: rgba(30, 136, 229, 0.08);
+  color: var(--accent-dark);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.1rem;
+}
+
+.dashboard-offer-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dashboard-offer-card h4 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.dashboard-offer-card p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.dashboard-offer-cta {
+  background: var(--accent-soft);
+  border-color: #BFDBFE;
+}
+
+.dashboard-offer-icon-accent {
+  background: var(--white);
+  color: var(--accent-dark);
+}
+
+.dashboard-offer-cta h4 {
+  color: var(--accent-dark);
+}
+
+@media (max-width: 576px) {
+  .offer-tabs {
+    gap: 0;
+  }
+  .offer-tab {
+    flex: 1;
+    padding: 0.9rem 0.5rem;
+    font-size: 0.72rem;
+  }
 }
 
 .problem-section {
@@ -509,12 +655,39 @@ a:hover { color: var(--primary-dark); }
   color: var(--white);
 }
 
-.pod-dashboard-link:hover {
+.portal-login-link:hover {
   background: var(--primary-dark);
   color: var(--white) !important;
 }
 
-/* ---- Buttons ---- */
+/* ---- Buttons ----
+   Every clickable button gets press feedback (scale down on :active) — an
+   interface should feel like it's listening the instant you press it. */
+.btn-primary,
+.btn-accent,
+.btn-outline-primary,
+.portal-login-link,
+.modern-hero .btn-outline-light,
+.modern-cta .btn-ghost,
+.cta-banner .btn,
+.demo-tab,
+#back-to-top {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 120ms var(--ease-out);
+}
+
+.btn-primary:active:not(:disabled),
+.btn-accent:active:not(:disabled),
+.btn-outline-primary:active,
+.portal-login-link:active,
+.modern-hero .btn-outline-light:active,
+.modern-cta .btn-ghost:active,
+.cta-banner .btn:active,
+.demo-tab:active,
+#back-to-top:active {
+  transform: scale(0.96);
+  transition-duration: 70ms;
+}
+
 .btn-primary {
   background: var(--primary);
   border-color: var(--primary);
@@ -522,7 +695,6 @@ a:hover { color: var(--primary-dark); }
   font-weight: 600;
   padding: 0.7rem 1.8rem;
   border-radius: 8px;
-  transition: background 0.2s, border-color 0.2s;
 }
 
 .btn-primary:hover {
@@ -538,7 +710,6 @@ a:hover { color: var(--primary-dark); }
   font-weight: 600;
   padding: 0.7rem 1.8rem;
   border-radius: 8px;
-  transition: background 0.2s;
 }
 
 .btn-accent:hover {
@@ -561,20 +732,6 @@ a:hover { color: var(--primary-dark); }
   border-color: var(--primary);
 }
 
-.hero .btn-outline-light {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.5);
-  border-radius: 8px;
-  color: var(--white);
-  padding: 0.7rem 1.8rem;
-}
-
-.hero .btn-outline-light:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.65);
-  color: var(--white);
-}
-
 .btn-primary:disabled {
   background: var(--text-muted);
   border-color: var(--text-muted);
@@ -582,94 +739,43 @@ a:hover { color: var(--primary-dark); }
   opacity: 1;
 }
 
-/* ---- Hero Section ---- */
-.hero {
-  background:
-    linear-gradient(135deg, rgba(15, 40, 65, 0.82) 0%, rgba(10, 30, 50, 0.88) 100%),
-    url('../images/image2.jpg') center/cover no-repeat;
-  color: var(--white);
-  padding: 100px 0 80px;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 600px;
-  height: 600px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 50%;
-}
-
-.hero h1 {
-  color: var(--white);
-  font-size: 2.6rem;
-  line-height: 1.3;
-  margin-bottom: 1.25rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-
-.hero p {
-  font-size: 1.15rem;
-  opacity: 0.95;
-  max-width: 620px;
-  margin-bottom: 2rem;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
-}
-
-.hero .badge-pill {
-  display: inline-block;
-  background: rgba(111, 211, 167, 0.12);
-  border: 1px solid rgba(111, 211, 167, 0.35);
-  color: #D1FAE5;
-  border-radius: 20px;
-  padding: 0.3rem 0.9rem;
-  font-size: 0.82rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  margin-bottom: 1.2rem;
-  text-transform: uppercase;
-}
-
-/* ---- Page Header (inner pages) ---- */
+/* ---- Page Header (inner pages) — same flat, shadow-free treatment as the
+   homepage hero, so every page reads as one coherent product. ---- */
 .page-header {
   background:
-    linear-gradient(rgba(5, 15, 30, 0.75), rgba(5, 15, 30, 0.80)),
+    linear-gradient(90deg, rgba(7,29,51,0.92), rgba(11,42,74,0.82), rgba(11,42,74,0.6)),
     url('../images/image2.jpg') center/cover no-repeat;
   border-bottom: none;
-  padding: 55px 0 45px;
+  padding: 64px 0 52px;
 }
 
 .page-header h1 {
-  font-size: 2.2rem;
+  font-size: 2.3rem;
+  line-height: 1.15;
+  letter-spacing: 0;
   color: var(--white);
-  text-shadow: 0 2px 12px rgba(0,0,0,0.7), 0 1px 4px rgba(0,0,0,0.5);
+  text-shadow: none;
+  max-width: 720px;
 }
 
 .page-header p {
-  color: #ffffff !important;
-  font-weight: 500;
-  text-shadow: 0 1px 10px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.7);
+  color: rgba(255,255,255,0.86);
+  text-shadow: none;
+  font-weight: 400;
+  font-size: 1.05rem;
+  max-width: 690px;
+  margin: 0;
 }
 
 .page-header .section-label {
   color: var(--mint);
   font-weight: 700;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-}
-
-.page-header p {
-  color: var(--text-muted);
-  font-size: 1.05rem;
 }
 
 /* ---- Section Common ---- */
 .section {
   padding: 70px 0;
+  scroll-margin-top: 88px; /* clears the sticky navbar when scrolled to as an anchor target */
 }
 
 .section-light {
@@ -1073,14 +1179,15 @@ footer a:hover { color: var(--mint); }
 
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
-  .hero { padding: 70px 0 60px; }
-  .hero h1 { font-size: 1.9rem; }
-  .hero p { font-size: 1rem; }
+  .page-header { padding: 44px 0 38px; }
+  .page-header h1 { font-size: 1.8rem; }
+  .page-header p { font-size: 1rem; }
   .section { padding: 50px 0; }
   .section-title { font-size: 1.6rem; }
   .cta-banner h2 { font-size: 1.6rem; }
   .contact-form-wrap { padding: 1.5rem; }
   .objective-box { padding: 1.75rem; }
+  .modern-hero { padding: 56px 0 48px; }
   .modern-hero h1 { font-size: 2.25rem; }
   .hero-actions,
   .cta-actions { align-items: stretch; }
@@ -1090,12 +1197,8 @@ footer a:hover { color: var(--mint); }
     align-items: stretch;
     flex-direction: column;
   }
-  .metric-grid,
-  .metric-grid.compact {
+  .metric-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  #dashboard .mini-table {
-    overflow-x: auto;
   }
   .hero-dashboard .mini-table {
     overflow-x: auto;
@@ -1105,10 +1208,6 @@ footer a:hover { color: var(--mint); }
   }
   .hero-dashboard .mini-table-row.demo-detail-row {
     min-width: 560px;
-  }
-  #dashboard .mini-table-row {
-    grid-template-columns: 120px repeat(5, 120px);
-    min-width: 720px;
   }
   .process-grid {
     grid-template-columns: 1fr;
@@ -1123,15 +1222,14 @@ footer a:hover { color: var(--mint); }
 }
 
 @media (max-width: 576px) {
-  .hero h1 { font-size: 1.6rem; }
+  .page-header h1 { font-size: 1.55rem; }
   .modern-hero h1 { font-size: 1.95rem; }
   .navbar-brand { font-size: 1.2rem; }
   .navbar-brand .brand-logo { height: 42px; }
   .brand-wordmark .brand-clean,
   .brand-wordmark .brand-books { font-size: 1.4rem; }
   .brand-wordmark small { font-size: .5rem; letter-spacing: 2.5px; }
-  .metric-grid,
-  .metric-grid.compact {
+  .metric-grid {
     grid-template-columns: 1fr;
   }
   .mini-table-row {

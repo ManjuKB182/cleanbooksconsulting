@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/portal", "destination": "https://REPLACE-WITH-PORTAL-PROJECT.vercel.app/portal" },
+    { "source": "/portal/:path*", "destination": "https://REPLACE-WITH-PORTAL-PROJECT.vercel.app/portal/:path*" }
+  ]
+}
