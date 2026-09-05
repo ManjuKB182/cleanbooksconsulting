@@ -60,6 +60,29 @@ h1, h2, h3, h4, h5, h6 {
 a { color: var(--primary); text-decoration: none; }
 a:hover { color: var(--primary-dark); }
 
+/* ---- Legal pages ---- */
+.legal-header { padding-bottom: 3.75rem; padding-top: 4.5rem; }
+.legal-header p { max-width: 760px; }
+.legal-effective { color: var(--text-muted); display: inline-block; font-size: .9rem; margin-top: .75rem; }
+.legal-section { background: var(--bg-light); }
+.legal-layout { align-items: start; display: grid; gap: 3rem; grid-template-columns: minmax(210px, 280px) minmax(0, 780px); justify-content: center; }
+.legal-summary { background: var(--primary); border-radius: 14px; color: rgba(255,255,255,.82); padding: 1.5rem; position: sticky; top: 100px; }
+.legal-summary strong { color: var(--white); display: block; font-family: 'Inter', sans-serif; font-size: 1.1rem; margin-bottom: .65rem; }
+.legal-summary p { margin-bottom: 1rem; }
+.legal-summary a { color: var(--mint); font-weight: 700; }
+.legal-copy { background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 14px 35px rgba(15,23,42,.06); padding: clamp(1.5rem, 4vw, 3rem); }
+.legal-copy h2 { color: var(--primary); font-size: 1.2rem; margin: 2.1rem 0 .65rem; }
+.legal-copy h2:first-child { margin-top: 0; }
+.legal-copy p, .legal-copy li { color: var(--body-text); }
+.legal-copy li + li { margin-top: .4rem; }
+.legal-copy a { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 2px; }
+.legal-callout { background: var(--accent-soft); border-left: 4px solid var(--accent); border-radius: 8px; margin: 1.5rem 0; padding: 1.1rem 1.25rem; }
+.legal-callout strong { color: var(--primary); font-family: 'Inter', sans-serif; }
+.legal-callout p { margin: .35rem 0 0; }
+.footer-legal { display: inline-flex; gap: 1rem; margin-left: .75rem; }
+.footer-legal a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 767px) { .legal-layout { grid-template-columns: 1fr; } .legal-summary { position: static; } .legal-header { padding: 3rem 0; } }
+
 /* ---- Navbar ---- */
 .navbar {
   background: var(--white);
